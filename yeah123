@@ -445,18 +445,24 @@
 			return tween
 		end 
 
-		function library:config_list_update() 
-			if not config_holder then return end 
+		function library:config_list_update()
+		    if not config_holder then return end
 		
-			local list = {}
+		    local list = {}
 		
-			for idx, file in next, listfiles(library.directory .. "/configs") do
-				local name = string.sub(file:gsub(library.directory .. "/configs\\", ""):gsub(library.directory .. "\\configs\\", ""), 1, -5)
-				list[#list + 1] = name
-			end
-			
-			config_holder.refresh_options(list)
-		end 
+		    for _, file in next, listfiles(library.directory .. "/configs") do
+		        local normalized = file:gsub("\\", "/")
+		        local name = normalized:gsub(library.directory .. "/configs/", "")
+
+		        if name:sub(-4) == ".cfg" then
+		            name = name:sub(1, -5)
+		        end
+		
+		        list[#list + 1] = name
+		    end
+		
+		    config_holder.refresh_options(list)
+		end
 
 		function library:get_config()
 			local Config = {}
@@ -1793,18 +1799,24 @@
 						library:config_list_update()
 					end})
 					section:button({name = "Delete", callback = function()
-						delfile(library.directory .. "/configs/" .. flags["config_name_list"] .. ".cfg")
-						library:config_list_update()
+					    local path = library.directory .. "/configs/" .. flags["config_name_list"] .. ".cfg"
+					    if isfile(path) then
+					        delfile(path)
+					        library:config_list_update()
+					    end
 					end})
 					section:button_holder({})
 					section:button({name = "Load", callback = function()
-						library:load_config(readfile(library.directory .. "/configs/" .. flags["config_name_list"] .. ".cfg"))
-						library:notification({text = "Loaded Config: " .. flags["config_name_list"], time = 3})
+					    local path = library.directory .. "/configs/" .. flags["config_name_list"] .. ".cfg"
+					    if isfile(path) then
+					        library:load_config(readfile(path))
+					    end
 					end})
 					section:button({name = "Save", callback = function()
-						writefile(library.directory .. "/configs/" .. flags["config_name_list"] .. ".cfg", library:get_config())
-						library:config_list_update()
-						library:notification({text = "Saved Config: " .. flags["config_name_list"], time = 3})
+					    local path = library.directory .. "/configs/" .. flags["config_name_list"] .. ".cfg"
+					    writefile(path, library:get_config())
+					    library:config_list_update()
+					    library:notification({text = "Saved Config: " .. flags["config_name_list"], time = 3})
 					end})
 					section:button_holder({})
 		          section:button({name = "Auto Load Config", callback = function()
