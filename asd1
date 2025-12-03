@@ -2728,7 +2728,7 @@
 
 		function library:multi_section(options)
 			local cfg = {
-				names = options.names or {"First", "Second", "Third"}, 
+				names = options.names or {"yeah", "Second", "Third"}, 
 				sections = {},
 			}
 
