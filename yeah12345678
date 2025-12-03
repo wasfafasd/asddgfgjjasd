@@ -451,28 +451,23 @@
 		    local list = {}
 		    local folder = library.directory .. "/configs"
 		
+		    print("Scanning folder:", folder)
+		
 		    if not isfolder(folder) then
 		        makefolder(folder)
 		    end
 		
 		    for _, file in next, listfiles(folder) do
-		        -- Debug: show what listfiles is returning
-		        print("Found file:", file)
+		        print("Found file:", file) -- debug
 		
-		        -- Normalize slashes
-		        local normalized = file:gsub("\\", "/")
+		        local name = file:gsub("\\", "/")
+		        name = name:match("([^/]+)$") or name
 		
-		        -- Extract just the filename (works for both full path or plain filename)
-		        local name = normalized:match("([^/]+)$") or normalized
-		
-		        -- Remove .cfg extension
 		        if name:sub(-4) == ".cfg" then
 		            name = name:sub(1, -5)
 		        end
 		
-		        if #name > 0 then
-		            list[#list + 1] = name
-		        end
+		        list[#list + 1] = name
 		    end
 		
 		    config_holder.refresh_options(list)
