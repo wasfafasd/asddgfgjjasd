@@ -445,31 +445,18 @@
 			return tween
 		end 
 
-		function library:config_list_update()
-		    if not config_holder then return end
+		function library:config_list_update() 
+			if not config_holder then return end 
 		
-		    local list = {}
-		    local folder = library.directory .. "/configs"
+			local list = {}
 		
-		    for _, file in next, listfiles(folder) do
-		        -- executors may return full paths or just filenames
-		        local name = file:gsub("\\", "/")
-		
-		        -- strip directory if present
-		        name = name:match(".*/(.*)") or name
-		
-		        -- remove .cfg extension
-		        if name:sub(-4) == ".cfg" then
-		            name = name:sub(1, -5)
-		        end
-		
-		        if #name > 0 then
-		            list[#list + 1] = name
-		        end
-		    end
-		
-		    config_holder.refresh_options(list)
-		end
+			for idx, file in next, listfiles(library.directory .. "/configs") do
+				local name = string.sub(file:gsub(library.directory .. "/configs\\", ""):gsub(library.directory .. "\\configs\\", ""), 1, -5)
+				list[#list + 1] = name
+			end
+			
+			config_holder.refresh_options(list)
+		end 
 
 
 		function library:get_config()
