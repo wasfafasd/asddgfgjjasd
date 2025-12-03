@@ -449,7 +449,7 @@
 		    if not config_holder then return end
 		
 		    local list = {}
-		    local folder = library.directory .. "/configs"
+		    local folder = "workspace/" .. library.directory .. "/configs"
 		
 		    print("Scanning folder:", folder)
 		
