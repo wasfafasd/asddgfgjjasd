@@ -450,15 +450,23 @@
 		
 		    local list = {}
 		
+		    if not isfolder(library.directory .. "/configs") then
+		        makefolder(library.directory .. "/configs")
+		    end
+		
 		    for _, file in next, listfiles(library.directory .. "/configs") do
-		        local normalized = file:gsub("\\", "/")
-		        local name = normalized:gsub(library.directory .. "/configs/", "")
 
-		        if name:sub(-4) == ".cfg" then
+		        local normalized = file:gsub("\\", "/")
+
+		        local name = normalized:match(".*/(.*)")
+
+		        if name and name:sub(-4) == ".cfg" then
 		            name = name:sub(1, -5)
 		        end
 		
-		        list[#list + 1] = name
+		        if name and #name > 0 then
+		            list[#list + 1] = name
+		        end
 		    end
 		
 		    config_holder.refresh_options(list)
