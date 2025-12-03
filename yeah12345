@@ -449,28 +449,28 @@
 		    if not config_holder then return end
 		
 		    local list = {}
+		    local folder = library.directory .. "/configs"
 		
-		    if not isfolder(library.directory .. "/configs") then
-		        makefolder(library.directory .. "/configs")
-		    end
+		    for _, file in next, listfiles(folder) do
+		        -- executors may return full paths or just filenames
+		        local name = file:gsub("\\", "/")
 		
-		    for _, file in next, listfiles(library.directory .. "/configs") do
-
-		        local normalized = file:gsub("\\", "/")
-
-		        local name = normalized:match(".*/(.*)")
-
-		        if name and name:sub(-4) == ".cfg" then
+		        -- strip directory if present
+		        name = name:match(".*/(.*)") or name
+		
+		        -- remove .cfg extension
+		        if name:sub(-4) == ".cfg" then
 		            name = name:sub(1, -5)
 		        end
 		
-		        if name and #name > 0 then
+		        if #name > 0 then
 		            list[#list + 1] = name
 		        end
 		    end
 		
 		    config_holder.refresh_options(list)
 		end
+
 
 		function library:get_config()
 			local Config = {}
