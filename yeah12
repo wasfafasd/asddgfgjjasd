@@ -96,6 +96,9 @@
 
 		display_orders = 0; 
 	}
+	if not isfolder(library.directory) then
+	    makefolder(library.directory)
+	end
 
 	local flags = library.flags
 	local config_flags = library.config_flags
